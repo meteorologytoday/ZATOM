@@ -1,0 +1,4 @@
+submit*.sh
+*.err
+*.out
+*.json
