@@ -194,7 +194,7 @@ function mkInitGuessCmd(
     spinup_years    :: Int64;
     γ0  :: Union{Float64, Nothing} = nothing,
     ξ0  :: Union{Float64, Nothing} = nothing,
-    transient_ξ     :: Float64 = NaN
+    transient_ξ     :: Float64 = 999.0
 )
 
     if γ0 == nothing
@@ -207,7 +207,7 @@ function mkInitGuessCmd(
         println("Use ξ0 = $ξ0")
     end
 
-    use_transient_ξ = isfinite(transient_ξ)
+    use_transient_ξ = transient_ξ != 999.0
 
     return `julia $wdir/02_gen_first_snapshot.jl
                 --epsilon        $(cfg["ϵ"])
@@ -235,7 +235,7 @@ function mkInitGuessCmd(
                 --trans-lat $(cfg["ϕc"])
                 --trans-width $trans_width
                 --use-transient-xi $use_transient_ξ
-                --transient-xi $( (use_transient_ξ) ? transient_ξ : NaN )
+                --transient-xi $transient_ξ
                 --transient-xi-duration $(cfg["transient_ξ_duration"])
                 --mu             $μ
         `
@@ -285,7 +285,7 @@ if parsed["method"] == "continuation"
             cfg["spinup"][scan_dir];
             Dict(
                 Symbol("$(varname)0") => begin_value,
-                :transient_ξ => ( ( cfg["use_transient_ξ_$(scan_dir)"] ) ? cfg["transient_ξ"] : NaN ) 
+                :transient_ξ => ( ( cfg["use_transient_ξ_$(scan_dir)"] ) ? cfg["transient_ξ"] : 999.0 ) 
             )...
         )
     end

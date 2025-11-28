@@ -184,7 +184,8 @@ end
 parsed = parse_args(ARGS, s)
 
 
-JSON.print(parsed, 4)
+
+JSON.json(parsed; pretty=true)
 
 # ===== [BEGIN setting] =====
 days_per_year = 360
